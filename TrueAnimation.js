@@ -51,3 +51,5 @@ class TrueAnimation{
         // Undo animation
     }
 }
+
+// export default TrueAnimation;
