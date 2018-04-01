@@ -1,5 +1,5 @@
 # TrueAnimation
-This is low weight lib, that helps with using step-by-step animation
+This is low weight lib, that helps with step-by-step animation
 # Usage
 To use that lib correctly:
 1. Connect lib to your project
@@ -39,10 +39,11 @@ To use that lib correctly:
   ```
   anim.init();
   ```
-  4) At last, when you want to start animation, use start() method
+  At last, when you want to start animation, use start() method
   ```
   square.addEventListener("click",()=>{
     anim.start();
   });
-  5) That's all! Congratulations!
   ```
+  
+  That's all! Congratulations!
