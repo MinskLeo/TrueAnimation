@@ -1,5 +1,7 @@
 // 1) Selecting
 let square = document.querySelector(".square");
+let play = document.querySelector("#play");
+let undo = document.querySelector("#undo");
 
 // 2) Constructor init
 let anim = new TrueAnimation(square,["width", "height", "opacity"],[{
@@ -21,6 +23,9 @@ let anim = new TrueAnimation(square,["width", "height", "opacity"],[{
 
 anim.init();
 
-square.addEventListener("click",()=>{
+play.addEventListener("click",()=>{
     anim.start();
 });
+undo.addEventListener("click",()=>{
+    anim.undo();
+})
