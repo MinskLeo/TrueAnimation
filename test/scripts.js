@@ -1,7 +1,7 @@
-// 1) Выбор элемента
+// 1) Selecting
 let square = document.querySelector(".square");
 
-// 2) Инициализация параметров
+// 2) Constructor init
 let anim = new TrueAnimation(square,["width", "height", "opacity"],[{
     // width => 0px;
     duration: 500,
@@ -19,9 +19,8 @@ let anim = new TrueAnimation(square,["width", "height", "opacity"],[{
     lastValue: "0"
 }]);
 
-// anim.init();
+anim.init();
 
 square.addEventListener("click",()=>{
-    anim.init();
     anim.start();
-})
+});
