@@ -8,19 +8,19 @@ class TrueAnimation{
         this.TrueAnimationTimeoutsReversed = [0];
 
         // Normal timings
-        let timeoutsSum = options[0].duration;
+        let timeoutsSum = options[0].duration+options[0].delay;
         for(let i=1;i<animations.length;i++){
             this.TrueAnimationTimeouts[i]=timeoutsSum;
-            timeoutsSum+=options[i].duration;
+            timeoutsSum+=options[i].duration+options[i].delay;
         }
         this.TrueAnimationTimeouts[animations.length]=timeoutsSum;
 
         // UNDO timings
         let reversedOptions = [...this.TrueAnimationOptions].reverse();
-        timeoutsSum=reversedOptions[0].duration;
+        timeoutsSum=reversedOptions[0].duration+reversedOptions[0].delay;
         for(let i=1;i<animations.length;i++){
             this.TrueAnimationTimeoutsReversed[i]=timeoutsSum;
-            timeoutsSum+=reversedOptions[i].duration;
+            timeoutsSum+=reversedOptions[i].duration+reversedOptions[i].delay;
         }
         this.TrueAnimationTimeoutsReversed[animations.length]=timeoutsSum;
 
@@ -32,11 +32,14 @@ class TrueAnimation{
         }
         this.TrueAnimationBackupedValues=this.TrueAnimationBackupedValues.reverse();
 
-        // Making all calculations in constructor method, for more effectiveness when works 'start' method
+        // Making all calculations in constructor method, for for greater efficiency when works 'start' method
         let animationsBufReverse = [...animations];
         console.log(animations)
         this.TrueAnimationAnimationsReversed = animationsBufReverse.reverse();
         
+
+        // Animation statis variable
+        this.TrueAnimationIsAnimating = false;
     }
 
     init () {
@@ -55,7 +58,7 @@ class TrueAnimation{
             this.TransitionString="";
         }
         for(let i=0;i<this.TrueAnimationAnimations.length;i++){
-            this.TransitionString+=this.TrueAnimationAnimations[i]+" "+this.TrueAnimationOptions[i].duration+"ms "+this.TrueAnimationOptions[i].timingFunction+" 0s";
+            this.TransitionString+=this.TrueAnimationAnimations[i]+" "+this.TrueAnimationOptions[i].duration+"ms "+this.TrueAnimationOptions[i].timingFunction+" "+this.TrueAnimationOptions[i].delay+"ms";
             if(i<this.TrueAnimationAnimations.length-1){
                 this.TransitionString+=", ";
             }
@@ -64,6 +67,11 @@ class TrueAnimation{
     }
 
     start (undo) {
+        // Boolean variable that indicate status of animation
+        this.TrueAnimationIsAnimating = true;
+        // Array with id's to clear animations
+        this.TrueAnimationClearTimeouts = [];
+
         // Just 'middle' variables
         let animationsArray = null;
         let animationsOptions = null;
@@ -86,7 +94,10 @@ class TrueAnimation{
 
         this.TrueAnimationElement.style.setProperty(animationsArray[0],animationsOptions[0].lastValue);
         for(let i=1;i<animationsArray.length;i++){
-            setTimeout( () => {
+            
+            // Binding here array with clearTimeout id's (to allow 'stop()' method )
+            this.TrueAnimationClearTimeouts[i] = setTimeout( () => {
+
                 this.TrueAnimationElement.style.setProperty(animationsArray[i],animationsOptions[i].lastValue);
             }, animationsTimeouts[i]);
         }
@@ -94,12 +105,28 @@ class TrueAnimation{
         // End
         setTimeout( ()=>{
             this.TrueAnimationElement.style.setProperty("transition", this.TransitionStringBackup);
+            this.TrueAnimationIsAnimating = false;
         },animationsTimeouts[animationsArray.length]);
     }
 
     undo() {
-        this.init();
-        this.start("undo");
+        // this.init();
+        this.start(true);
+    }
+
+    stop(){
+        // Checking, if animation is in 'playing' state
+
+        if(this.TrueAnimationIsAnimating){
+
+            // Clearing timeouts
+            for (let i = 1; i < this.TrueAnimationClearTimeouts.length; i++) {
+                clearTimeout(this.TrueAnimationClearTimeouts[i]);
+            }
+
+            // Clearing transition String
+            this.TrueAnimationElement.style.setProperty("transition", this.TransitionStringBackup);
+        }
     }
 }
 
