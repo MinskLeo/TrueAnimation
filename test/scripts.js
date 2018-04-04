@@ -26,17 +26,23 @@ let stop = document.querySelector("#stop");
 // }]);
 
 
-let anim = new TrueAnimation(square,["transform","background-color"],[{
-    // width => 3px;
-    duration: 500,
-    timingFunction: "linear",
-    lastValue: "scale(1.2)",
-    delay: 0
-},{
-    // height => 3px;
-    duration: 500,
+let anim = new TrueAnimation(square, ["background-color", "background-color","background-color"],[{
+    // red
+    duration: 2000,
     timingFunction: "linear",
     lastValue: "red",
+    delay: 0
+},{
+    // green
+    duration: 2000,
+    timingFunction: "linear",
+    lastValue: "green",
+    delay: 0
+},{
+    // blue
+    duration: 2000,
+    timingFunction: "linear",
+    lastValue: "blue",
     delay: 0
 }]);
 
@@ -49,5 +55,5 @@ undo.addEventListener("click",()=>{
     anim.undo();
 })
 stop.addEventListener("click",() => {
-    anim.stop();
+    anim.stop(true);
 })
