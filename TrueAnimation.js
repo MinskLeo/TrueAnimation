@@ -38,7 +38,7 @@ class TrueAnimation{
         this.TrueAnimationAnimationsReversed = animationsBufReverse.reverse();
         
 
-        // Animation statis variable
+        // Animation status variable
         this.TrueAnimationIsAnimating = false;
     }
 
@@ -67,51 +67,73 @@ class TrueAnimation{
     }
 
     start (undo) {
-        // Boolean variable that indicate status of animation
-        this.TrueAnimationIsAnimating = true;
-        // Array with id's to clear animations
-        this.TrueAnimationClearTimeouts = [];
+        // Filtering multiple clicks
+        if(!this.TrueAnimationIsAnimating){
+            // Boolean variable that indicate status of animation
+            this.TrueAnimationIsAnimating = true;
+            // Array with id's to clear animations
+            this.TrueAnimationClearTimeouts = [];
 
-        // Just 'middle' variables
-        let animationsArray = null;
-        let animationsOptions = null;
-        let animationsTimeouts = null;
+            // Just 'middle' variables
+            let animationsArray = null;
+            let animationsOptions = null;
+            let animationsTimeouts = null;
 
-        // If simple PLAY animation
-        if(!undo){
-            animationsArray = this.TrueAnimationAnimations;
-            animationsOptions = this.TrueAnimationOptions;
-            animationsTimeouts = this.TrueAnimationTimeouts;
-        }else{
-            // if UNDO animation
-            animationsArray=this.TrueAnimationAnimationsReversed;
-            animationsOptions = this.TrueAnimationBackupedValues;
-            animationsTimeouts = this.TrueAnimationTimeoutsReversed;
+            // If simple PLAY animation
+            if(!undo){
+                if(this.TrueAnimationLastDirection==="play"){
+                    this.TrueAnimationIsAnimating = false;
+                    return;
+                }
 
+                animationsArray = this.TrueAnimationAnimations;
+                animationsOptions = this.TrueAnimationOptions;
+                animationsTimeouts = this.TrueAnimationTimeouts;
+
+                this.TrueAnimationLastDirection = "play";
+            }else{
+                // if UNDO animation
+                
+                if(this.TrueAnimationLastDirection==="undo"){
+                    this.TrueAnimationIsAnimating = false;
+                    return;
+                }
+
+                animationsArray=this.TrueAnimationAnimationsReversed;
+                animationsOptions = this.TrueAnimationBackupedValues;
+                animationsTimeouts = this.TrueAnimationTimeoutsReversed;
+
+                this.TrueAnimationLastDirection = "undo";
+
+            }
+            // Start
+            this.TrueAnimationElement.style.setProperty("transition", this.TransitionString);
+
+
+            this.TrueAnimationElement.style.setProperty(animationsArray[0],animationsOptions[0].lastValue);
+            for(let i=1;i<animationsArray.length;i++){
+                
+                // Binding here array with clearTimeout id's (to allow 'stop()' method )
+                this.TrueAnimationClearTimeouts[i] = setTimeout( () => {
+
+                    this.TrueAnimationElement.style.setProperty(animationsArray[i],animationsOptions[i].lastValue);
+                }, animationsTimeouts[i]);
+            }
+
+            // End
+            setTimeout( ()=>{
+                this.TrueAnimationElement.style.setProperty("transition", this.TransitionStringBackup);
+                this.TrueAnimationIsAnimating = false;
+            },animationsTimeouts[animationsArray.length]);
         }
-        // Start
-        this.TrueAnimationElement.style.setProperty("transition", this.TransitionString);
-
-        this.TrueAnimationElement.style.setProperty(animationsArray[0],animationsOptions[0].lastValue);
-        for(let i=1;i<animationsArray.length;i++){
-            
-            // Binding here array with clearTimeout id's (to allow 'stop()' method )
-            this.TrueAnimationClearTimeouts[i] = setTimeout( () => {
-
-                this.TrueAnimationElement.style.setProperty(animationsArray[i],animationsOptions[i].lastValue);
-            }, animationsTimeouts[i]);
-        }
-
-        // End
-        setTimeout( ()=>{
-            this.TrueAnimationElement.style.setProperty("transition", this.TransitionStringBackup);
-            this.TrueAnimationIsAnimating = false;
-        },animationsTimeouts[animationsArray.length]);
+        
     }
 
     undo() {
-        // this.init();
-        this.start(true);
+        if(!this.TrueAnimationIsAnimating){
+            // this.init();
+            this.start(true);
+        }
     }
 
     stop(){
@@ -126,7 +148,23 @@ class TrueAnimation{
 
             // Clearing transition String
             this.TrueAnimationElement.style.setProperty("transition", this.TransitionStringBackup);
+
+            // Clearing direction string to allow 'all-directions' animation
+            this.TrueAnimationLastDirection = null;
         }
+    }
+
+    status(){
+        console.log("Element:");
+        console.log(this.TrueAnimationElement);
+        console.log("Animations:");
+        console.log(this.TrueAnimationAnimations);
+        console.log("Options:");
+        console.log(this.TrueAnimationOptions);
+        console.log("Is animating now?: "+this.TrueAnimationIsAnimating)
+        console.log("TransitionString: "+this.TransitionString);
+        console.log("TransitionStringBackup: "+this.TransitionStringBackup);
+        console.log("LastDirection: "+this.TrueAnimationLastDirection)
     }
 }
 

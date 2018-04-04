@@ -5,23 +5,38 @@ let undo = document.querySelector("#undo");
 let stop = document.querySelector("#stop");
 
 // 2) Constructor init
-let anim = new TrueAnimation(square,["width", "height", "opacity"],[{
+// let anim = new TrueAnimation(square,["width", "height", "background"],[{
+//     // width => 3px;
+//     duration: 500,
+//     timingFunction: "linear",
+//     lastValue: "3px",
+//     delay: 0
+// },{
+//     // height => 3px;
+//     duration: 500,
+//     timingFunction: "linear",
+//     lastValue: "3px",
+//     delay: 0
+// },{
+//     // opacity => 0;
+//     duration: 500,
+//     timingFunction: "linear",
+//     lastValue: "red",
+//     delay: 0
+// }]);
+
+
+let anim = new TrueAnimation(square,["transform","background-color"],[{
     // width => 3px;
     duration: 500,
     timingFunction: "linear",
-    lastValue: "3px",
-    delay: 1000
+    lastValue: "scale(1.2)",
+    delay: 0
 },{
     // height => 3px;
     duration: 500,
     timingFunction: "linear",
-    lastValue: "3px",
-    delay: 0
-},{
-    // opacity => 0;
-    duration: 200,
-    timingFunction: "linear",
-    lastValue: "0",
+    lastValue: "red",
     delay: 0
 }]);
 
